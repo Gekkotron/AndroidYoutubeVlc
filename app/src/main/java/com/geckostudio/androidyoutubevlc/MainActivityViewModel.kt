@@ -1,7 +1,6 @@
 package com.geckostudio.androidyoutubevlc
 
 import androidx.lifecycle.*
-import com.yausername.youtubedl_android.mapper.VideoInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
