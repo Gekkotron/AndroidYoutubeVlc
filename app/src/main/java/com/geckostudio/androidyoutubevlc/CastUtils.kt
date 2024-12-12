@@ -3,16 +3,19 @@ package com.geckostudio.androidyoutubevlc
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.provider.MediaStore.Audio.Media
 import android.util.Log
 import android.widget.AdapterView
 import com.connectsdk.core.MediaInfo
 import com.connectsdk.device.ConnectableDevice
 import com.connectsdk.device.ConnectableDeviceListener
 import com.connectsdk.device.DevicePicker
+import com.connectsdk.discovery.CapabilityFilter
 import com.connectsdk.discovery.DiscoveryManager
 import com.connectsdk.service.DeviceService
 import com.connectsdk.service.capability.MediaControl
 import com.connectsdk.service.capability.MediaPlayer
+import com.connectsdk.service.capability.listeners.ResponseListener
 import com.connectsdk.service.command.ServiceCommandError
 import com.connectsdk.service.sessions.LaunchSession
 import com.connectsdk.service.sessions.WebAppSession
@@ -35,6 +38,16 @@ class CastUtils {
             DiscoveryManager.init(applicationContext)
             // This step could even happen in your app's delegate
             mDiscoveryManager = DiscoveryManager.getInstance()
+
+            val capabilityFilter = CapabilityFilter()
+            capabilityFilter.addCapabilities(MediaPlayer.Play_Video)
+            capabilityFilter.addCapabilities(MediaControl.Seek)
+            capabilityFilter.addCapabilities(MediaControl.Play)
+            capabilityFilter.addCapabilities(MediaControl.Pause)
+            capabilityFilter.addCapabilities(MediaControl.Stop)
+            capabilityFilter.addCapabilities(MediaControl.FastForward)
+            capabilityFilter.addCapabilities(MediaControl.Rewind)
+            mDiscoveryManager?.setCapabilityFilters(capabilityFilter)
         } catch (_: SocketException) {
 
         }
@@ -105,6 +118,18 @@ class CastUtils {
         mMediaControl?.rewind(null)
     }
 
+    fun seek(position: Long) {
+        mMediaControl?.seek(position, object: ResponseListener<Any> {
+            override fun onError(error: ServiceCommandError) {
+                Log.e("MainActivityLog", "Could not seek: $error")
+            }
+
+            override fun onSuccess(`object`: Any?) {
+                Log.e("MainActivityLog", "Successfully seeked!")
+            }
+        })
+    }
+
     fun close() {
         mDevice?.removeListener(listener)
         mDevice?.disconnect()
@@ -132,8 +157,8 @@ class CastUtils {
             Log.e("MainActivityLog", "onDeviceReady $device")
 
             mDevice = device
-
             listenerDeviceReady?.deviceIsReady()
+            mMediaControl = mDevice?.mediaControl
         }
 
         override fun onDeviceDisconnected(device: ConnectableDevice?) {
