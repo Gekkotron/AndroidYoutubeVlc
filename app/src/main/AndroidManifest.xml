@@ -17,7 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidYoutubeVlc"
         tools:targetApi="31"
-        android:extractNativeLibs="true"
         android:requestLegacyExternalStorage="true">
 
         <activity
