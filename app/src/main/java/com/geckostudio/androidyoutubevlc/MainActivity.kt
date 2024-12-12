@@ -3,6 +3,7 @@ package com.geckostudio.androidyoutubevlc
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
@@ -45,6 +46,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Log.e("MainActivityLog", "onCreate $savedInstanceState $adapter")
 
@@ -92,6 +95,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
+        binding.search.setOnClickListener {
+            viewModel.getStreamingUrl(binding.urlOfYoutube.text.toString())
+        }
 
         binding.castBtn.setOnClickListener {
             cast?.displayCastMenu(this)
@@ -100,6 +106,15 @@ class MainActivity : AppCompatActivity() {
         binding.rewind.setOnClickListener {
             cast?.rewind()
         }
+
+        binding.rewindMore.setOnClickListener {
+            cast?.seek(-10000)
+        }
+
+        binding.forwardMore.setOnClickListener {
+            cast?.seek(10000)
+        }
+//http://https//youtube.com/watch?v=XxJfU6zmt-A
 
         binding.playPause.setOnClickListener {
             if(isPause) {
@@ -155,13 +170,18 @@ class MainActivity : AppCompatActivity() {
                 adapter?.castDeviceIsReady = true
                 binding.castBtn.setImageResource(R.drawable.ic_cast_connected)
                 Toast.makeText(this@MainActivity, "Connecté", Toast.LENGTH_SHORT).show()
+                binding.layoutBtnTV.visibility = View.VISIBLE
+                binding.layoutBtnTVMore.visibility = View.VISIBLE
             }
 
             override fun deviceDisplayControl() {
                 binding.layoutBtnTV.visibility = View.VISIBLE
+                binding.layoutBtnTVMore.visibility = View.VISIBLE
             }
 
             override fun deviceIsDisconnected() {
+                binding.layoutBtnTV.visibility = View.GONE
+                binding.layoutBtnTVMore.visibility = View.GONE
                 adapter?.castDeviceIsReady = false
                 binding.castBtn.setImageResource(R.drawable.ic_cast)
                 Toast.makeText(this@MainActivity, "Déconnecté", Toast.LENGTH_SHORT).show()

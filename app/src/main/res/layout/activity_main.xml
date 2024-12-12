@@ -60,6 +60,12 @@
             android:layout_margin="10dp"/>
 
         <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_play"
+            android:id="@+id/search"
+            android:tint="@color/white"/>
+        <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_weight="0.1"
@@ -121,12 +127,40 @@
             app:tint="@color/white" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/layoutBtnTVMore"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/layoutBtnTV"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rewindMore"
+            android:src="@drawable/ic_rewind"
+            android:layout_margin="15dp"
+            app:tint="@color/white"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/forwardMore"
+            android:src="@drawable/ic_forward"
+            android:layout_margin="15dp"
+            app:tint="@color/white"/>
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/recycler_view"
         app:layout_constraintVertical_bias="1"
-        app:layout_constraintTop_toBottomOf="@id/layoutBtnTV"
+        app:layout_constraintTop_toBottomOf="@id/layoutBtnTVMore"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
